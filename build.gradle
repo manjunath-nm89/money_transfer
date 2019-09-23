@@ -1,0 +1,72 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+    dependencies {
+        // https://plugins.gradle.org/plugin/com.github.johnrengelman.shadow
+        classpath "com.github.jengelman.gradle.plugins:shadow:2.0.1"
+    }
+}
+
+plugins {
+    id 'application'
+    id 'groovy'
+    id 'java'
+}
+
+apply plugin: "com.github.johnrengelman.shadow"
+apply plugin: 'java'
+apply plugin: 'idea'
+
+version = '0.0.1'
+mainClassName = "com.org.moneytransfer.MoneyTransferApplication"
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+    maven {
+        url "https://plugins.gradle.org/m2/"
+    }
+}
+
+ext {
+    lombokVersion = '1.16.8'
+    jodaVersion='2.3'
+}
+
+dependencies {
+    compile group: 'io.dropwizard', name: 'dropwizard-core', version: '1.1.0'
+
+    // https://mvnrepository.com/artifact/com.google.guava/guava
+    compile group: 'com.google.guava', name: 'guava', version: '24.0-jre'
+
+    // https://mvnrepository.com/artifact/com.smoketurner/dropwizard-swagger
+    compile group: 'com.smoketurner', name: 'dropwizard-swagger', version: '1.1.0-1'
+
+    // https://mvnrepository.com/artifact/org.projectlombok/lombok
+    compile group: 'org.projectlombok', name: 'lombok', version: '1.16.20'
+
+    compile group: 'io.dropwizard.metrics', name: 'metrics-core', version: '3.1.0'
+    compile group: 'org.codehaus.groovy', name: 'groovy-all', version: '2.4.12'
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    // testCompile group: 'net.saliman', name: 'gradle-cobertura-plugin', version: '2.4.0'
+
+}
+
+run {
+    args 'server', 'environments/money_transfer-dev.yml'
+}
+
+shadowJar {
+    mergeServiceFiles()
+    exclude 'META-INF/*.DSA'
+    exclude 'META-INF/*.RSA'
+}
+
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '4.0'
+}
