@@ -1,0 +1,34 @@
+appName: Money Transfer Service - Dev !!!
+
+logging:
+  level: DEBUG
+  appenders:
+    - type: file
+      currentLogFilename: ./logs/service.log
+      archive: false
+      timeZone: GMT
+      logFormat: "%level [%d] %logger : %replace(%msg){'\n', '\\\\n'} %replace(%ex){'\n','\\\\n'}%nopex%n"
+    - type: console
+      threshold: DEBUG
+      timeZone: GMT
+      target: stdout
+      logFormat: "%level [%d] %logger : %replace(%msg){'\n', '\\\\n'} %replace(%ex){'\n','\\\\n'}%nopex%n"
+
+
+server:
+  type: default
+  applicationConnectors:
+    - type: http
+      port: 8080
+  type: default
+  requestLog:
+    type: classic
+    timeZone: PST
+    appenders:
+      - type: console
+        threshold: ALL
+
+swagger:
+    resourcePackage: "com.org.moneytransfer.resources"
+
+environment: "Dev"
