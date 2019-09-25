@@ -4,6 +4,10 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.org.moneytransfer.healthcheck.HealthChecker;
 import com.org.moneytransfer.resources.HealthCheckResource;
+import com.org.moneytransfer.resources.UserResource;
+import com.org.moneytransfer.service.dao.UserDao;
+import com.org.moneytransfer.service.managers.UserManager;
+import com.org.moneytransfer.service.managers.impl.UserManagerImpl;
 import io.dropwizard.Application;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
@@ -40,11 +44,18 @@ public class MoneyTransferApplication extends Application<MoneyTransferConfigura
         environment.getObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         environment.getObjectMapper().setSerializationInclusion(JsonInclude.Include.NON_NULL);
 
+        LOGGER.info("Registering DAOs..");
+        UserDao userDao = new UserDao();
+
+        LOGGER.info("Registering Managers..");
+        UserManager userManager = new UserManagerImpl(userDao);
+
         LOGGER.info("Registering Resources..");
          // Api Health Check Resource
         environment.jersey().register(new HealthCheckResource());
+        environment.jersey().register(new UserResource(userManager));
 
-        LOGGER.info("Registering HealthChecks");
+        LOGGER.info("Registering HealthChecks..");
         environment.healthChecks().register("APIHealthCheck", new HealthChecker(configuration));
 
     }

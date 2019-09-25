@@ -1,7 +1,7 @@
 appName: Money Transfer Service - Dev !!!
 
 logging:
-  level: DEBUG
+  level: INFO
   appenders:
     - type: file
       currentLogFilename: ./logs/service.log
