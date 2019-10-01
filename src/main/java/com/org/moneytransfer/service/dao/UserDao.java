@@ -24,13 +24,11 @@ public class UserDao extends BaseDao<UserStore> {
 
         UserStore userStore = new UserStore();
 
-        setCreateFields(userStore);
-
         userStore.setEmail(user.getEmail());
         userStore.setFirstName(user.getFirstName());
         userStore.setLastName(user.getLastName());
 
-        return saveData(userStore);
+        return createRecord(userStore);
 
     }
 

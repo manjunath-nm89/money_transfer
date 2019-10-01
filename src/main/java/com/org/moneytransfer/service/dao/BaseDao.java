@@ -14,15 +14,16 @@ public abstract class BaseDao<T extends BaseDataStore> {
         return (T) getDataTable().get(primaryKey);
     }
 
+    public <T extends BaseDataStore> T createRecord(T dataStore) {
+        LinkedHashMap<Long, T> dataTable = getDataTable();
+        setCreateFields(dataStore);
+        dataTable.put(dataStore.getId(), dataStore);
+        return dataStore;
+    }
+
     public <T extends BaseDataStore> void setCreateFields(T dataStore) {
         dataStore.setId(generateLongId());
         setTimestamps(dataStore);
-    }
-
-    public <T extends BaseDataStore> T saveData(T dataStore) {
-        LinkedHashMap<Long, T> dataTable = getDataTable();
-        dataTable.put(dataStore.getId(), dataStore);
-        return dataStore;
     }
 
     private Long generateLongId() {

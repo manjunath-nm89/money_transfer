@@ -56,9 +56,7 @@ public class UserResource {
     @Timed
     @ApiOperation("Creates the User")
     public User createUser(User user) {
-
         return userManager.createUser(user);
-
     }
 
 
