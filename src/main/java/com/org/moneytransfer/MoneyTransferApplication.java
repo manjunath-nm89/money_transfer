@@ -7,6 +7,7 @@ import com.org.moneytransfer.resources.AccountResource;
 import com.org.moneytransfer.resources.HealthCheckResource;
 import com.org.moneytransfer.resources.UserResource;
 import com.org.moneytransfer.service.dao.AccountDao;
+import com.org.moneytransfer.service.dao.AccountTransactionDao;
 import com.org.moneytransfer.service.dao.UserDao;
 import com.org.moneytransfer.service.managers.AccountManager;
 import com.org.moneytransfer.service.managers.UserManager;
@@ -50,7 +51,8 @@ public class MoneyTransferApplication extends Application<MoneyTransferConfigura
 
         LOGGER.info("Registering DAOs..");
         UserDao userDao = new UserDao();
-        AccountDao accountDao = new AccountDao();
+        AccountTransactionDao accountTransactionDao = new AccountTransactionDao();
+        AccountDao accountDao = new AccountDao(accountTransactionDao);
 
         LOGGER.info("Registering Managers..");
         UserManager userManager = new UserManagerImpl(userDao);

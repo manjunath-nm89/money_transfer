@@ -21,6 +21,13 @@ public abstract class BaseDao<T extends BaseDataStore> {
         return dataStore;
     }
 
+    public <T extends BaseDataStore> T updateRecord(T dataStore) {
+        LinkedHashMap<Long, T> dataTable = getDataTable();
+        setUpdateFields(dataStore);
+        dataTable.put(dataStore.getId(), dataStore);
+        return dataStore;
+    }
+
     public <T extends BaseDataStore> void setCreateFields(T dataStore) {
         dataStore.setId(generateLongId());
         setTimestamps(dataStore);
@@ -36,6 +43,11 @@ public abstract class BaseDao<T extends BaseDataStore> {
     private <T extends BaseDataStore> void setTimestamps(T dataStore) {
         Long currentEpoch = Instant.now().toEpochMilli();
         dataStore.setCreatedAt(currentEpoch);
+        dataStore.setUpdatedAt(currentEpoch);
+    }
+
+    private <T extends BaseDataStore> void setUpdateFields(T dataStore) {
+        Long currentEpoch = Instant.now().toEpochMilli();
         dataStore.setUpdatedAt(currentEpoch);
     }
 
