@@ -38,6 +38,28 @@ public class AccountResource {
         this.accountManager = accountManager;
     }
 
+
+    @GET
+    @Path("{accountId}")
+    @Timed
+    @ApiOperation("Searches for the account by id and returns the object")
+    public Account getAccount(@PathParam("accountId") Long accountId) {
+
+        Account account = accountManager.getAccountById(accountId);
+
+        if(account == null) {
+            throw new WebApplicationException(
+                    ServiceUtils.buildErrorResponse(
+                            Response.Status.NOT_FOUND, String.format("Account with %d not found", accountId)
+                    )
+            );
+        }
+        else {
+            return account;
+        }
+
+    }
+
     @POST
     @Timed
     @ApiOperation("Create account for a user")

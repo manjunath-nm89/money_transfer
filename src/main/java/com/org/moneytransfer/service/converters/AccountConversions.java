@@ -15,7 +15,6 @@ public class AccountConversions {
         account.setName(accountStore.getName());
         account.setType(accountStore.getType());
         account.setUserId(accountStore.getUserId());
-        account.setCurrencyCode(accountStore.getCurrencyCode());
         account.setBalance(accountStore.getBalance());
         account.setCreatedAt(accountStore.getCreatedAt());
         account.setUpdatedAt(accountStore.getUpdatedAt());

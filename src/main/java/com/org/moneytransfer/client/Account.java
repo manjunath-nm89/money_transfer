@@ -14,7 +14,6 @@ public class Account {
     private String name;
     private AccountType type;
     private BigDecimal balance;
-    private CurrencyCode currencyCode;
     // Owner of the account
     private Long userId;
     private Long createdAt;
