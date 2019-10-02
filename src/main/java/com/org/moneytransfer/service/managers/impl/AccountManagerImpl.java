@@ -1,12 +1,15 @@
 package com.org.moneytransfer.service.managers.impl;
 
 import com.org.moneytransfer.client.Account;
+import com.org.moneytransfer.client.AccountTransaction;
 import com.org.moneytransfer.client.Transaction;
 import com.org.moneytransfer.service.converters.AccountConversions;
 import com.org.moneytransfer.service.dao.AccountDao;
 import com.org.moneytransfer.service.dao.UserDao;
 import com.org.moneytransfer.service.datastore.AccountStore;
+import com.org.moneytransfer.service.datastore.AccountTransactionStore;
 import com.org.moneytransfer.service.enums.AccountType;
+import com.org.moneytransfer.service.enums.TransactionType;
 import com.org.moneytransfer.service.managers.AccountManager;
 import com.org.moneytransfer.service.util.ServiceUtils;
 
@@ -16,6 +19,7 @@ import java.math.BigDecimal;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class AccountManagerImpl implements AccountManager {
 
@@ -67,6 +71,18 @@ public class AccountManagerImpl implements AccountManager {
         validateTransactionData(transaction);
         LinkedList<AccountStore> accountStores = accountDao.executeTransaction(transaction);
         return checkAndProcessAccounts(accountStores);
+    }
+
+    @Override
+    public List<AccountTransaction> getTransactions(Long accountId) {
+
+        LinkedList<AccountTransactionStore> debitTransactionStores = accountDao.getDebitTransactions(accountId);
+        LinkedList<AccountTransactionStore> creditTransactionStores = accountDao.getCreditTransactions(accountId);
+
+        List<AccountTransaction> debitTransactions = convertTransactions(debitTransactionStores, TransactionType.DEBIT);
+        List<AccountTransaction> creditTransactions = convertTransactions(creditTransactionStores, TransactionType.CREDIT);
+
+        return sortAndMergeTransactions(debitTransactions, creditTransactions);
     }
 
     @Override
@@ -148,6 +164,20 @@ public class AccountManagerImpl implements AccountManager {
                     )
             );
         }
+    }
+
+    private List<AccountTransaction> convertTransactions(LinkedList<AccountTransactionStore> transactionStores,
+                                                         TransactionType transactionType) {
+        return transactionStores.stream().map(accountTransactionStore -> {
+            return AccountConversions.convertTransaction(accountTransactionStore, transactionType);
+        }).collect(Collectors.toList());
+    }
+
+    private List<AccountTransaction> sortAndMergeTransactions(List<AccountTransaction> debitTransactions,
+                                                              List<AccountTransaction> creditTransactions) {
+        return Stream.concat(debitTransactions.stream(), creditTransactions.stream()).sorted(
+            (aT1, aT2) -> aT2.getUpdatedAt().compareTo(aT1.getUpdatedAt())
+        ).collect(Collectors.toList());
     }
 }
 
