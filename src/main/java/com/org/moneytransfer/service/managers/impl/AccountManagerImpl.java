@@ -96,12 +96,12 @@ public class AccountManagerImpl implements AccountManager {
 
         if(originAccountId != null) {
             Account originAccount = getAccountById(originAccountId);
-            validateAccount(originAccount);
+            validateAccount(originAccount, originAccountId);
             checkBalance(originAccount, transaction.getAmount());
         }
 
         if(toAccountId != null) {
-            validateAccount(getAccountById(toAccountId));
+            validateAccount(getAccountById(toAccountId), toAccountId);
         }
 
         if(!userExists(initiatorId)) {
@@ -113,11 +113,11 @@ public class AccountManagerImpl implements AccountManager {
         }
     }
 
-    private void validateAccount(Account account) {
+    private void validateAccount(Account account, Long accountId) {
         if(account == null) {
             throw new WebApplicationException(
                     ServiceUtils.buildErrorResponse(
-                            Response.Status.NOT_FOUND, String.format("Account with %d not found", account.getAccountId())
+                            Response.Status.NOT_FOUND, String.format("Account with %d not found", accountId)
                     )
             );
         }
