@@ -76,8 +76,8 @@ public class AccountManagerImpl implements AccountManager {
     @Override
     public List<AccountTransaction> getTransactions(Long accountId) {
 
-        LinkedList<AccountTransactionStore> debitTransactionStores = accountDao.getDebitTransactions(accountId);
-        LinkedList<AccountTransactionStore> creditTransactionStores = accountDao.getCreditTransactions(accountId);
+        List<AccountTransactionStore> debitTransactionStores = accountDao.getDebitTransactions(accountId);
+        List<AccountTransactionStore> creditTransactionStores = accountDao.getCreditTransactions(accountId);
 
         List<AccountTransaction> debitTransactions = convertTransactions(debitTransactionStores, TransactionType.DEBIT);
         List<AccountTransaction> creditTransactions = convertTransactions(creditTransactionStores, TransactionType.CREDIT);
@@ -166,8 +166,9 @@ public class AccountManagerImpl implements AccountManager {
         }
     }
 
-    private List<AccountTransaction> convertTransactions(LinkedList<AccountTransactionStore> transactionStores,
+    private List<AccountTransaction> convertTransactions(List<AccountTransactionStore> transactionStores,
                                                          TransactionType transactionType) {
+
         return transactionStores.stream().map(accountTransactionStore -> {
             return AccountConversions.convertTransaction(accountTransactionStore, transactionType);
         }).collect(Collectors.toList());
@@ -175,9 +176,11 @@ public class AccountManagerImpl implements AccountManager {
 
     private List<AccountTransaction> sortAndMergeTransactions(List<AccountTransaction> debitTransactions,
                                                               List<AccountTransaction> creditTransactions) {
+
         return Stream.concat(debitTransactions.stream(), creditTransactions.stream()).sorted(
             (aT1, aT2) -> aT2.getUpdatedAt().compareTo(aT1.getUpdatedAt())
         ).collect(Collectors.toList());
+
     }
 }
 

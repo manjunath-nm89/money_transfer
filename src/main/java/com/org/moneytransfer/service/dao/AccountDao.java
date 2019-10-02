@@ -3,8 +3,10 @@ package com.org.moneytransfer.service.dao;
 import com.org.moneytransfer.client.Account;
 import com.org.moneytransfer.client.Transaction;
 import com.org.moneytransfer.service.datastore.AccountStore;
+import com.org.moneytransfer.service.datastore.AccountTransactionStore;
 import com.org.moneytransfer.service.enums.AccountType;
 import com.org.moneytransfer.service.enums.CurrencyCode;
+import com.org.moneytransfer.service.enums.TransactionType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,6 +14,7 @@ import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Optional;
 
 public class AccountDao extends BaseDao<AccountStore> {
@@ -81,6 +84,14 @@ public class AccountDao extends BaseDao<AccountStore> {
 
         return accountStores;
 
+    }
+
+    public List<AccountTransactionStore> getDebitTransactions(Long accountId) {
+        return accountTransactionDao.getTransactions(accountId, TransactionType.DEBIT);
+    }
+
+    public List<AccountTransactionStore> getCreditTransactions(Long accountId) {
+        return accountTransactionDao.getTransactions(accountId, TransactionType.CREDIT);
     }
 
     private AccountStore withdrawAmount(AccountStore originAccount, BigDecimal withdrawalAmount) {
