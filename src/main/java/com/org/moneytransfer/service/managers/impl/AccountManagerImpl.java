@@ -12,6 +12,7 @@ import com.org.moneytransfer.service.util.ServiceUtils;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
+import java.math.BigDecimal;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -93,12 +94,14 @@ public class AccountManagerImpl implements AccountManager {
         Long originAccountId = transaction.getOriginAccountId();
         Long initiatorId = transaction.getInitiatorId();
 
-        if(toAccountId != null) {
-            validateAccount(toAccountId);
+        if(originAccountId != null) {
+            Account originAccount = getAccountById(originAccountId);
+            validateAccount(originAccount);
+            checkBalance(originAccount, transaction.getAmount());
         }
 
-        if(originAccountId != null) {
-            validateAccount(originAccountId);
+        if(toAccountId != null) {
+            validateAccount(getAccountById(toAccountId));
         }
 
         if(!userExists(initiatorId)) {
@@ -110,13 +113,11 @@ public class AccountManagerImpl implements AccountManager {
         }
     }
 
-    private void validateAccount(Long accountId) {
-        Account toAccount = getAccountById(accountId);
-
-        if(toAccount == null) {
+    private void validateAccount(Account account) {
+        if(account == null) {
             throw new WebApplicationException(
                     ServiceUtils.buildErrorResponse(
-                            Response.Status.NOT_FOUND, String.format("Account with %d not found", accountId)
+                            Response.Status.NOT_FOUND, String.format("Account with %d not found", account.getAccountId())
                     )
             );
         }
@@ -135,4 +136,19 @@ public class AccountManagerImpl implements AccountManager {
             );
         }
     }
+
+    private void checkBalance(Account originAccount, BigDecimal amount) {
+        BigDecimal diffAmount = originAccount.getBalance().subtract(amount);
+        boolean hasInSufficientBalance = (diffAmount.compareTo(BigDecimal.ZERO) < 0);
+
+        if(hasInSufficientBalance) {
+            throw new WebApplicationException(
+                    ServiceUtils.buildErrorResponse(
+                            Response.Status.BAD_REQUEST, "The Origin Account has insufficient balance"
+                    )
+            );
+        }
+    }
 }
+
+
