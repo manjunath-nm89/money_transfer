@@ -14,7 +14,6 @@ public class Transaction {
     private Long initiatorId;
     private Long originAccountId;
     private Long toAccountId;
-    private TransactionType transactionType;
     private CurrencyCode currencyCode;
     private BigDecimal amount;
 }

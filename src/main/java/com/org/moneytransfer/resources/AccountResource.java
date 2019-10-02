@@ -62,7 +62,7 @@ public class AccountResource {
                 transaction.getToAccountId() == null || transaction.getOriginAccountId() == null) {
             throw new WebApplicationException(
                     ServiceUtils.buildErrorResponse(
-                            Response.Status.BAD_REQUEST, "Transaction is missing - account details or initiatorId or amount"
+                            Response.Status.BAD_REQUEST, "Missing Transaction Data - account details or initiatorId or amount"
                     )
             );
         }
@@ -83,11 +83,12 @@ public class AccountResource {
                 transaction.getAmount().equals(BigDecimal.ZERO)) {
             throw new WebApplicationException(
                     ServiceUtils.buildErrorResponse(
-                            Response.Status.BAD_REQUEST, "Transaction is missing - initiatorId or amount"
+                            Response.Status.BAD_REQUEST, "Missing Transaction Data - initiatorId or amount"
                     )
             );
         }
 
+        transaction.setOriginAccountId(null);
         transaction.setToAccountId(accountId);
         transaction.setCurrencyCode(CurrencyCode.GBP);
 
