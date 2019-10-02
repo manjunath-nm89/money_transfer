@@ -35,7 +35,7 @@ public class AccountManagerImpl implements AccountManager {
         if(!userExists(accountOwnerId)) {
             throw new WebApplicationException(
                     ServiceUtils.buildErrorResponse(
-                            Response.Status.NOT_FOUND, String.format("User with %d not found", accountOwnerId)
+                            Response.Status.NOT_FOUND, String.format("User with Id %d not found", accountOwnerId)
                     )
             );
         }
@@ -107,7 +107,7 @@ public class AccountManagerImpl implements AccountManager {
         if(!userExists(initiatorId)) {
             throw new WebApplicationException(
                     ServiceUtils.buildErrorResponse(
-                            Response.Status.NOT_FOUND, String.format("User with %d not found", initiatorId)
+                            Response.Status.NOT_FOUND, String.format("User with Id %d not found", initiatorId)
                     )
             );
         }
@@ -117,7 +117,7 @@ public class AccountManagerImpl implements AccountManager {
         if(account == null) {
             throw new WebApplicationException(
                     ServiceUtils.buildErrorResponse(
-                            Response.Status.NOT_FOUND, String.format("Account with %d not found", accountId)
+                            Response.Status.NOT_FOUND, String.format("Account with Id %d not found", accountId)
                     )
             );
         }
