@@ -3,10 +3,14 @@ package com.org.moneytransfer;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.org.moneytransfer.healthcheck.HealthChecker;
+import com.org.moneytransfer.resources.AccountResource;
 import com.org.moneytransfer.resources.HealthCheckResource;
 import com.org.moneytransfer.resources.UserResource;
+import com.org.moneytransfer.service.dao.AccountDao;
 import com.org.moneytransfer.service.dao.UserDao;
+import com.org.moneytransfer.service.managers.AccountManager;
 import com.org.moneytransfer.service.managers.UserManager;
+import com.org.moneytransfer.service.managers.impl.AccountManagerImpl;
 import com.org.moneytransfer.service.managers.impl.UserManagerImpl;
 import io.dropwizard.Application;
 import io.dropwizard.setup.Bootstrap;
@@ -46,14 +50,16 @@ public class MoneyTransferApplication extends Application<MoneyTransferConfigura
 
         LOGGER.info("Registering DAOs..");
         UserDao userDao = new UserDao();
+        AccountDao accountDao = new AccountDao();
 
         LOGGER.info("Registering Managers..");
         UserManager userManager = new UserManagerImpl(userDao);
+        AccountManager accountManager = new AccountManagerImpl(accountDao, userDao);
 
         LOGGER.info("Registering Resources..");
-         // Api Health Check Resource
         environment.jersey().register(new HealthCheckResource());
         environment.jersey().register(new UserResource(userManager));
+        environment.jersey().register(new AccountResource(accountManager));
 
         LOGGER.info("Registering HealthChecks..");
         environment.healthChecks().register("APIHealthCheck", new HealthChecker(configuration));
