@@ -11,7 +11,7 @@ public interface AccountManager {
 
     Account getAccountById(Long accountId);
 
-    List<Account> deposit(Transaction transaction);
+    Account deposit(Transaction transaction);
 
     List<Account> transferMoney(Transaction transaction);
 

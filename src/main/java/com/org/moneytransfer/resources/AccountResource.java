@@ -110,7 +110,7 @@ public class AccountResource {
     @Timed
     @Path("/{accountId}/deposit")
     @ApiOperation("Deposit money to Account")
-    public List<Account> deposit(@PathParam("accountId") Long accountId, Transaction transaction) {
+    public Account deposit(@PathParam("accountId") Long accountId, Transaction transaction) {
 
         if(transaction.getInitiatorId() == null || transaction.getAmount() == null ||
                 transaction.getAmount().equals(BigDecimal.ZERO)) {

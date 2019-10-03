@@ -58,12 +58,12 @@ public class AccountManagerImpl implements AccountManager {
     }
 
     @Override
-    public List<Account> deposit(Transaction transaction) {
+    public Account deposit(Transaction transaction) {
 
         validateTransactionData(transaction);
 
         LinkedList<AccountStore> accountStores = accountDao.executeTransaction(transaction);
-        return checkAndProcessAccounts(accountStores);
+        return checkAndProcessAccounts(accountStores).get(0);
     }
 
     @Override
