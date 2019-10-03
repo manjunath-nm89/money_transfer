@@ -12,6 +12,7 @@ public class UserConversions {
         user.setFirstName(userStore.getFirstName());
         user.setLastName(userStore.getLastName());
         user.setUserId(userStore.getId());
+        user.setEmail(userStore.getEmail());
         user.setCreatedAt(userStore.getCreatedAt());
         user.setUpdatedAt(userStore.getUpdatedAt());
 
