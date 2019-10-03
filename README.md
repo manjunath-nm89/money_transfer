@@ -5,6 +5,7 @@ A simple application to transfer accounts between different accounts.
 ### Features
 * Health Checks for Auto Recovery
 * In Memory DataStore
+* Errors and Consistency Checks
 * Create Users
 * Create Accounts (Checking and Savings)
 * Deposit Money into Accounts
